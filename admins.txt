@@ -1,0 +1,2 @@
+admin1 mypassword
+admin2 secret123

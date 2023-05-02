@@ -5,6 +5,7 @@
 #include <chrono>
 #include <stdexcept>
 #include <cstring>
+#include <conio.h>
 
 using namespace std;
 
@@ -115,6 +116,11 @@ public:
     int getEconomySeats() const { return economySeats; }
     int getBusinessSeats() const { return businessSeats; }
 
+    string getFlightDetails() const {
+        return flightNumber + " | " + origin + " | " + destination + " | " + departureTime + " | " + arrivalTime + " | " + to_string(economySeats) + " | " + to_string(businessSeats);
+    }
+    
+
     // Setters
     void setFlightNumber(const string &newFlightNumber) { flightNumber = newFlightNumber; }
     void setOrigin(const string &newOrigin) { origin = newOrigin; }
@@ -160,6 +166,11 @@ public:
     string getName() const { return name; }
     string getCity() const { return city; }
     string getLocation() const { return location; }
+    string getAirportCode() const { return location; } // Assuming location is the airport code
+    // getAirportDetails()is down below
+    string getAirportDetails() const {
+        return name + " | " + city + " | " + location;
+    }
 
     // Setters
     void setName(const string &newName) { name = newName; }
@@ -307,7 +318,30 @@ void saveAirportData(Airport airports[], int airportCount, const string &filenam
 }
 
 
-
+//...............................................................................................
+//........AAAAAAAA..................dddddd.............................iiiiii....................
+//........AAAAAAAA..................dddddd.............................iiiiii....................
+//.......AAAAAAAAA..................dddddd.............................iiiiii....................
+//.......AAAAAAAAAA.................dddddd.......................................................
+//.......AAAAAAAAAA.................dddddd.......................................................
+//......AAAAAAAAAAA.................dddddd.......................................................
+//......AAAAAAAAAAAA........dddddddddddddd..mmmmmmmmmmmmm..mmmmmmmm....iiiiii..nnnnnnnnnnnnnn....
+//.....AAAAAA.AAAAAA.......ddddddddddddddd..mmmmmmmmmmmmmmmmmmmmmmmm...iiiiii..nnnnnnnnnnnnnnn...
+//.....AAAAAA.AAAAAA......dddddddddddddddd..mmmmmmmmmmmmmmmmmmmmmmmm...iiiiii..nnnnnnnnnnnnnnnn..
+//.....AAAAAA..AAAAAA.....ddddddd.dddddddd..mmmmmmmmmmmmmmmmmmmmmmmm...iiiiii..nnnnnnnn.nnnnnnn..
+//....AAAAAA...AAAAAA....ddddddd...ddddddd..mmmmmm...mmmmmmm..mmmmmm...iiiiii..nnnnnnn...nnnnnn..
+//....AAAAAA...AAAAAAA...dddddd.....dddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//....AAAAAA....AAAAAA...dddddd.....dddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//...AAAAAAAAAAAAAAAAA...dddddd.....dddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//...AAAAAAAAAAAAAAAAAA..dddddd.....dddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//...AAAAAAAAAAAAAAAAAA..dddddd.....dddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//..AAAAAAAAAAAAAAAAAAA..dddddd.....dddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//..AAAAAA.......AAAAAAA.ddddddd...ddddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//.AAAAAA.........AAAAAA..ddddddd.dddddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//.AAAAAA.........AAAAAA..dddddddddddddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//.AAAAAA.........AAAAAAA..ddddddddddddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//.AAAAA...........AAAAAA...dddddddddddddd..mmmmmm...mmmmmm....mmmmm...iiiiii..nnnnnn....nnnnnn..
+//...............................................................................................
 
 int adminLogin(const Admin admins[], int adminCount) {
     string username, password;
@@ -326,30 +360,120 @@ int adminLogin(const Admin admins[], int adminCount) {
     return -1;
 }
 
+// Function declarations
+void changeFlightSchedule(Flight flights[], int flightCount);
+void addNewFlightRoute(Flight flights[], int &flightCount, Airport airports[], int airportCount);
+void updateAirlineInquiryDetails(Flight flights[], int flightCount, Airport airports[], int airportCount);
+void updateFlightDetails(Flight flights[], int flightCount);
+void updateAirportDetails(Airport airports[], int airportCount);
+
 void adminMenu(Admin &admin, Flight flights[], int &flightCount, Airport airports[], int &airportCount) {
     int option;
 
     while (true) {
-        cout << "Admin Menu" << endl;
-        cout << "1. Change flight schedule" << endl;
-        cout << "2. Add new flight route" << endl;
-        cout << "3. Update airline inquiry details" << endl;
-        cout << "4. Logout" << endl;
+    cout << "Admin Menu" << endl;
+    cout << "1. Change flight schedule" << endl;
+    cout << "2. Add new flight route" << endl;
+    cout << "3. Update airline inquiry details" << endl;
+    cout << "4. Logout" << endl;
+    cout << "Choose an option: ";
+    cin >> option;
+
+    switch (option) {
+        case 1:
+            // Change flight schedule
+            changeFlightSchedule(flights, flightCount);
+            break;
+        case 2:
+            // Add new flight route
+            addNewFlightRoute(flights, flightCount, airports, airportCount);
+            break;
+        case 3:
+            // Update airline inquiry details
+            updateAirlineInquiryDetails(flights, flightCount, airports, airportCount);
+            break;
+        case 4:
+            cout << "Logged out successfully." << endl;
+            return;
+        default:
+            cerr << "Invalid option. Please try again." << endl;
+            this_thread::sleep_for(chrono::seconds(10));
+            break;
+    }
+}
+}
+
+void changeFlightSchedule(Flight flights[], int flightCount) {
+    string flightNumber;
+    cout << "Enter the flight number you want to change the schedule for: ";
+    cin >> flightNumber;
+
+    for (int i = 0; i < flightCount; ++i) {
+        if (flights[i].getFlightNumber() == flightNumber) {
+            string newDepartureTime;
+            cout << "Enter the new departure time: ";
+            cin >> newDepartureTime;
+            flights[i].setDepartureTime(newDepartureTime);
+            cout << "Flight schedule updated successfully." << endl;
+            return;
+        }
+    }
+
+    cerr << "Flight not found. Please try again." << endl;
+}
+
+void displayFlights(const Flight flights[], int flightCount) {
+    cout << "Flight details:" << endl;
+    for (int i = 0; i < flightCount; ++i) {
+        // Assuming you have a method to display flight details in your Flight class
+        cout << flights[i].getFlightDetails() << endl;
+    }
+}
+
+void displayAirports(const Airport airports[], int airportCount) {
+    cout << "Airport details:" << endl;
+    for (int i = 0; i < airportCount; ++i) {
+        // Assuming you have a method to display airport details in your Airport class
+        cout << airports[i].getAirportDetails() << endl;
+    }
+}
+
+void addNewFlightRoute(Flight flights[], int &flightCount, Airport airports[], int airportCount) {
+    Flight newFlight;
+
+    // Set flight details (e.g., flight number, departure time, arrival time, origin, and destination)
+    // Assuming you have setter methods like setFlightNumber, setDepartureTime, etc., in your Flight class
+
+    // Example:
+    string flightNumber;
+    cout << "Enter the flight number: ";
+    cin >> flightNumber;
+    newFlight.setFlightNumber(flightNumber);
+    // Set other details similarly
+
+    flights[flightCount++] = newFlight;
+    cout << "New flight route added successfully." << endl;
+}
+
+void updateAirlineInquiryDetails(Flight flights[], int flightCount, Airport airports[], int airportCount) {
+    int option;
+
+    while (true) {
+        cout << "Update Airline Inquiry Details" << endl;
+        cout << "1. Update flight details" << endl;
+        cout << "2. Update airport details" << endl;
+        cout << "3. Return to the main menu" << endl;
         cout << "Choose an option: ";
         cin >> option;
 
         switch (option) {
             case 1:
-                // Change flight schedule
+                updateFlightDetails(flights, flightCount);
                 break;
             case 2:
-                // Add new flight route
+                updateAirportDetails(airports, airportCount);
                 break;
             case 3:
-                // Update airline inquiry details
-                break;
-            case 4:
-                cout << "Logged out successfully." << endl;
                 return;
             default:
                 cerr << "Invalid option. Please try again." << endl;
@@ -358,6 +482,83 @@ void adminMenu(Admin &admin, Flight flights[], int &flightCount, Airport airport
         }
     }
 }
+
+void updateFlightDetails(Flight flights[], int flightCount) {
+    string flightNumber;
+    cout << "Enter the flight number you want to update: ";
+    cin >> flightNumber;
+
+    for (int i = 0; i < flightCount; ++i) {
+        if (flights[i].getFlightNumber() == flightNumber) {
+            string newDepartureTime;
+            cout << "Enter the new departure time: ";
+            cin >> newDepartureTime;
+            flights[i].setDepartureTime(newDepartureTime);
+
+            // Update other details similarly
+
+            cout << "Flight details updated successfully." << endl;
+            return;
+        }
+    }
+
+    cerr << "Flight not found. Please try again." << endl;
+}
+
+void updateAirportDetails(Airport airports[], int airportCount) {
+    string airportCode;
+    cout << "Enter the airport code you want to update: ";
+    cin >> airportCode;
+
+    for (int i = 0; i < airportCount; ++i) {
+        if (airports[i].getLocation() == airportCode) { // Assuming the location is used as the airport code
+            string newAirportName;
+            cout << "Enter the new airport name: ";
+            cin >> newAirportName;
+            airports[i].setName(newAirportName); // Use setName instead of setAirportName
+
+            // Update other details similarly
+
+            cout << "Airport details updated successfully." << endl;
+            return;
+        }
+    }
+
+    cerr << "Airport not found. Please try again." << endl;
+}
+
+
+//.........................................................................................................................................................
+//.PPPPPPPPPPPPPPP.........................................................................................................................................
+//.PPPPPPPPPPPPPPPPP.......................................................................................................................................
+//.PPPPPPPPPPPPPPPPP.......................................................................................................................................
+//.PPPPPPPPPPPPPPPPPP......................................................................................................................................
+//.PPPPPP....PPPPPPPP......................................................................................................................................
+//.PPPPPP......PPPPPP......................................................................................................................................
+//.PPPPPP......PPPPPP....aaaaaaaaaa......sssssssssss......sssssssssss.......eeeeeeeee.....nnnnn.nnnnnnnn.......ggggggggggggg.....eeeeeeeee.....errrrrrrrr..
+//.PPPPPP......PPPPPP...aaaaaaaaaaaaa...sssssssssssss....sssssssssssss....eeeeeeeeeeee....nnnnnnnnnnnnnnn....ggggggggggggggg....eeeeeeeeeeee...errrrrrrrr..
+//.PPPPPP......PPPPPP..Paaaaaaaaaaaaa...ssssssssssssss..ssssssssssssss....eeeeeeeeeeeee...nnnnnnnnnnnnnnn....ggggggggggggggg...eeeeeeeeeeeeee..errrrrrrrr..
+//.PPPPPP...PPPPPPPPP..Paaaaaaaaaaaaa..assssss.sssssss..sssssss.sssssss..seeeeeeeeeeeeee..nnnnnnnnnnnnnnnn..nggggggggggggggg...eeeeeeeeeeeeee..errrrrrr....
+//.PPPPPPPPPPPPPPPPPP..Paaaa...aaaaaa..asssss...ssssss..sssss....ssssss..seeeee...eeeeee..nnnnnnn...nnnnnn..nggggg...ggggggg..geeeee....eeeee..errrrrr.....
+//.PPPPPPPPPPPPPPPPP............aaaaa..asssssss.........ssssssss........sseeee.....eeeee..nnnnnn....nnnnnn.nngggg.....gggggg..geeeee....eeeeee.errrrr......
+//.PPPPPPPPPPPPPPPP.........aaaaaaaaa..asssssssssss.....sssssssssss.....sseeeeeeeeeeeeee..nnnnnn....nnnnnn.nngggg.....gggggg..geeeeeeeeeeeeeee.errrrr......
+//.PPPPPPPPPPPPPPP......aaaaaaaaaaaaa...sssssssssssss....sssssssssssss..sseeeeeeeeeeeeee..nnnnnn....nnnnnn.nngggg.....gggggg..geeeeeeeeeeeeeee.errrrr......
+//.PPPPPP..............Paaaaaaaaaaaaa....sssssssssssss....sssssssssssss.sseeeeeeeeeeeeee..nnnnnn....nnnnnn.nngggg.....gggggg..geeeeeeeeeeeeeee.errrrr......
+//.PPPPPP..............Paaaaaaaaaaaaa......ssssssssssss.....sssssssssss.sseeee............nnnnnn....nnnnnn.nngggg.....gggggg..geeee............errrrr......
+//.PPPPPP.............PPaaaaa...aaaaa..........ssssssss.........sssssss.sseeee............nnnnnn....nnnnnn.nngggg.....gggggg..geeeee...........errrrr......
+//.PPPPPP.............PPaaaa...aaaaaa..asssss....ssssss.sssss.....sssss..seeeee...........nnnnnn....nnnnnn..nggggg...ggggggg..geeeee...........errrrr......
+//.PPPPPP.............PPaaaaaaaaaaaaa..assssss.ssssssssssssssss.sssssss..seeeeee.eeeeeee..nnnnnn....nnnnnn..nggggggggggggggg..geeeeeeeeeeeeee..errrrr......
+//.PPPPPP.............PPaaaaaaaaaaaaaa.assssssssssssss..sssssssssssssss...eeeeeeeeeeeeee..nnnnnn....nnnnnn...ggggggggggggggg...eeeeeeeeeeeeeee.errrrr......
+//.PPPPPP..............Paaaaaaaaaaaaaa..ssssssssssssss...sssssssssssss....eeeeeeeeeeeee...nnnnnn....nnnnnn...ggggggggggggggg....eeeeeeeeeeeee..errrrr......
+//.PPPPPP...............aaaaaaaaaaaaaa...sssssssssss......sssssssssss.......eeeeeeeeee....nnnnnn....nnnnnn....gggggggggggggg.....eeeeeeeeee....errrrr......
+//....................................................................................................................gggggg...............................
+//..........................................................................................................nggggg....gggggg...............................
+//..........................................................................................................ngggggg.gggggggg...............................
+//..........................................................................................................ngggggggggggggg................................
+//...........................................................................................................gggggggggggggg................................
+//............................................................................................................ggggggggggg..................................
+//.........................................................................................................................................................
+
 
 
 int passengerLogin(const Passenger passengers[], int passengerCount) {
@@ -461,31 +662,30 @@ int main() {
     // Initialize arrays to store Admins, Passengers, Flights, and Airports.
     // You can adjust the array size based on the desired maximum capacity.
     Admin admins[100];
-    Passenger passengers[50000];
-    Flight flights[1000];
+    Passenger passengers[50];
+    Flight flights[100];
     Airport airports[10];
 
-    // Initialize necessary variables and indexes for arrays.
+    // // Initialize necessary variables and indexes for arrays.
     int adminCount = 0;
     int passengerCount = 0;
     int flightCount = 0;
     int airportCount = 0;
 
-    // Load data from files.
+    // // Load data from files.
     loadAdminData(admins, adminCount, "admins.txt");
     loadPassengerData(passengers, passengerCount, "passengers.txt");
     loadFlightData(flights, flightCount, "flights.txt");
     loadAirportData(airports, airportCount, "airports.txt");
 
 
-   
 
     // Main menu loop
     while (true) {
          // Add this before the return statement in your main() function
-        std::cout << "Press any key to exit..." << std::endl;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cin.get();
+        // std::cout << "Press any key to exit..." << std::endl;
+        // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        // std::cin.get();
         int option;
         cout << "Welcome to NUCES Airline Flight System (NAFS)\n";
         cout << "1. Admin Login\n";
@@ -520,6 +720,8 @@ int main() {
                 saveFlightData(flights, flightCount, "flights.txt");
                 saveAirportData(airports, airportCount, "airports.txt");
                 cout << "Thank you for using NUCES Airline Flight System (NAFS)!" << endl;
+                cout << "Press any key to exit..." << endl;
+                _getch(); // Wait for a key press before exiting
                 return 0;
             default:
                 cerr << "Invalid option. Please try again." << endl;
@@ -527,4 +729,5 @@ int main() {
                 break;
         }
     }
+    
 }
