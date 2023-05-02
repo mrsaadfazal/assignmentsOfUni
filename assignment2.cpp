@@ -187,63 +187,63 @@ istream& operator>>(istream &in, Airport &airport) {
 }
 
 void loadAdminData(Admin admins[], int &adminCount, const string &filename) {
-    ifstream inFile(filename);
+    ifstream inputFile(filename);
 
-    if (!inFile) {
-        cerr << "Error opening file: " << filename << endl;
+    if (!inputFile) {
+        cerr << "Error: Unable to open " << filename << " for reading." << endl;
         return;
     }
 
-    while (inFile >> admins[adminCount]) {
+    while (inputFile >> admins[adminCount]) {
         adminCount++;
     }
 
-    inFile.close();
+    inputFile.close();
 }
 
 void loadPassengerData(Passenger passengers[], int &passengerCount, const string &filename) {
-    ifstream inFile(filename);
+    ifstream inputFile(filename);
 
-    if (!inFile) {
-        cerr << "Error opening file: " << filename << endl;
+    if (!inputFile) {
+        cerr << "Error: Unable to open " << filename << " for reading." << endl;
         return;
     }
 
-    while (inFile >> passengers[passengerCount]) {
+    while (inputFile >> passengers[passengerCount]) {
         passengerCount++;
     }
 
-    inFile.close();
+    inputFile.close();
 }
 
 void loadFlightData(Flight flights[], int &flightCount, const string &filename) {
-    ifstream inFile(filename);
+    ifstream inputFile(filename);
 
-    if (!inFile) {
-        cerr << "Error opening file: " << filename << endl;
+    if (!inputFile) {
+        cerr << "Error: Unable to open " << filename << " for reading." << endl;
         return;
     }
 
-    while (inFile >> flights[flightCount]) {
+    while (inputFile >> flights[flightCount]) {
         flightCount++;
     }
 
-    inFile.close();
+    inputFile.close();
 }
 
 void loadAirportData(Airport airports[], int &airportCount, const string &filename) {
-    ifstream inFile(filename);
+    ifstream inputFile(filename);
 
-    if (!inFile) {
-        cerr << "Error opening file: " << filename << endl;
+    if (!inputFile) {
+        cerr << "Error: Unable to open " << filename << " for reading." << endl;
         return;
     }
 
-    while (inFile >> airports[airportCount]) {
+    while (inputFile >> airports[airportCount]) {
         airportCount++;
     }
 
-    inFile.close();
+    inputFile.close();
 }
 
 void saveAdminData(Admin admins[], int adminCount, const string &filename) {

@@ -1,4 +1,0 @@
-flightNumber airlineName origin destination departureTime arrivalTime
-1 PIA Karachi Lahore 12:00 14:00
-2 PIA Karachi Islamabad 12:00 14:00
-3 PIA Karachi Peshawar 12:00 14:00
