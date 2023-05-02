@@ -1,0 +1,4 @@
+airportName airportCode
+Jinnah International Airport KHI
+Allama Iqbal International Airport LHE
+Islamabad International Airport ISB

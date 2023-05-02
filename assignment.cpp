@@ -396,20 +396,20 @@ int main() {
     // You can adjust the array size based on the desired maximum capacity.
     Admin admins[100];
     Passenger passengers[50000];
-    Flight flights[1000];
-    Airport airports[10];
+    // Flight flights[1000];
+    // Airport airports[10];
     
     // Initialize necessary variables and indexes for arrays.
     int adminCount = 0;
     int passengerCount = 0;
-    int flightCount = 0;
-    int airportCount = 0;
+    // int flightCount = 0;
+    // int airportCount = 0;
     
     // Load data from files.
     loadAdminData(admins, adminCount, "admin_data.txt");
     loadPassengerData(passengers, passengerCount);
-    loadFlightData(flights, flightCount);
-    loadAirportData(airports, airportCount);
+    // loadFlightData(flights, flightCount);
+    // loadAirportData(airports, airportCount);
     
     // Main menu loop
     while (true) {
@@ -422,41 +422,85 @@ int main() {
         cout << "Choose an option: ";
         cin >> option;
 
-        switch (option) {
-            case 1: {
-                // Admin Login
-                int adminIndex = adminLogin(admins, adminCount);
-                if (adminIndex != -1) {
-                    adminMenu(admins[adminIndex], passengers, passengerCount, flights, flightCount, airports, airportCount);
-                }
-                break;
-            }
-            case 2: {
-                // Passenger Login
-                int passengerIndex = passengerLogin(passengers, passengerCount);
-                if (passengerIndex != -1) {
-                    passengerMenu(passengers[passengerIndex], flights, flightCount, airports, airportCount);
-                }
-                break;
-            }
-            case 3:
-                // Register as Passenger
-                registerPassenger(passengers, passengerCount);
-                break;
-            case 4:
-                // Save data to files.
-                saveAdminData(admins, adminCount);
-                savePassengerData(passengers, passengerCount);
-                saveFlightData(flights, flightCount);
-                saveAirportData(airports, airportCount);
-                cout << "Thank you for using NUCES Airline Flight System (NAFS)!" << endl;
-                return 0;
-            default:
-                cerr << "Invalid option. Please try again." << endl;
-                this_thread::sleep_for(chrono::seconds(10));
-                break;
-        }
-    }
+    //     switch (option) {
+    //         case 1: {
+    //             // Admin Login
+    //             int adminIndex = adminLogin(admins, adminCount);
+    //             if (adminIndex != -1) {
+    //                 adminMenu(admins[adminIndex], passengers, passengerCount, flights, flightCount, airports, airportCount);
+    //             }
+    //             break;
+    //         }
+    //         case 2: {
+    //             // Passenger Login
+    //             int passengerIndex = passengerLogin(passengers, passengerCount);
+    //             if (passengerIndex != -1) {
+    //                 passengerMenu(passengers[passengerIndex], flights, flightCount, airports, airportCount);
+    //             }
+    //             break;
+    //         }
+    //         case 3:
+    //             // Register as Passenger
+    //             registerPassenger(passengers, passengerCount);
+    //             break;
+    //         case 4:
+    //             // Save data to files.
+    //             saveAdminData(admins, adminCount);
+    //             savePassengerData(passengers, passengerCount);
+    //             saveFlightData(flights, flightCount);
+    //             saveAirportData(airports, airportCount);
+    //             cout << "Thank you for using NUCES Airline Flight System (NAFS)!" << endl;
+    //             return 0;
+    //         default:
+    //             cerr << "Invalid option. Please try again." << endl;
+    //             this_thread::sleep_for(chrono::seconds(10));
+    //             break;
+    //     }
+    // }
 
-    return 0;
+    // return 0;
+    }
 }
+
+
+int main();
+
+// to run this code, use g++ main.cpp -std=c++11
+// then if you are on windows, use a.exe
+// then use the menu to register as a passenger
+
+// to compile and run on windows, use g++ main.cpp -std=c++11 && a.exe
+
+
+// to run this program we need to create these files:
+// admin_data.txt
+// passengers.txt
+// flights.txt
+// airports.txt
+
+
+// admin_data.txt
+// admin1 admin1
+// admin2 admin2
+// admin3 admin3
+
+// passengers.txt
+// username password name email phone
+// passenger1 passenger1 passenger1 passenger1@gmailcom 123
+// passenger2 passenger2 passenger2 passenger2@gmailcom 123
+
+
+
+// flights.txt
+// flightNumber airlineName origin destination departureTime arrivalTime
+// 1 PIA Karachi Lahore 12:00 14:00
+// 2 PIA Karachi Islamabad 12:00 14:00
+// 3 PIA Karachi Peshawar 12:00 14:00
+
+
+// airports.txt
+// airportName airportCode
+// Jinnah International Airport KHI
+// Allama Iqbal International Airport LHE
+// Islamabad International Airport ISB
+
