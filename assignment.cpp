@@ -23,7 +23,14 @@ public:
     string getPassword() const { return password; }
     void setUsername(const string& username) { this->username = username; }
     void setPassword(const string& password) { this->password = password; }
+
+    friend ostream& operator<<(ostream& os, const Admin& admin) {
+        os << admin.getUsername() << " " << admin.getPassword();
+        return os;
+    }
 };
+
+
 
 class Passenger {
 private:
@@ -34,22 +41,34 @@ private:
     string passport;
 
 public:
-    Passenger() : username(""), password(""), name(""), cnic(""), passport("") {}
-    Passenger(const string& username, const string& password, const string& name, const string& cnic, const string& passport) :
-        username(username), password(password), name(name), cnic(cnic), passport(passport) {}
-    Passenger(const Passenger& other) :
-        username(other.username), password(other.password), name(other.name), cnic(other.cnic), passport(other.passport) {}
+    Passenger()
+        : username(""), password(""), name(""), cnic(""), passport("")
+    {}
+
+    Passenger(const string& username, const string& password, const string& name, const string& cnic, const string& passport)
+        : username(username), password(password), name(name), cnic(cnic), passport(passport)
+    {}
+
+    Passenger(const Passenger& other)
+        : username(other.username), password(other.password), name(other.name), cnic(other.cnic), passport(other.passport)
+    {}
 
     string getUsername() const { return username; }
     string getPassword() const { return password; }
     string getName() const { return name; }
     string getCnic() const { return cnic; }
     string getPassport() const { return passport; }
+
     void setUsername(const string& username) { this->username = username; }
     void setPassword(const string& password) { this->password = password; }
     void setName(const string& name) { this->name = name; }
     void setCnic(const string& cnic) { this->cnic = cnic; }
     void setPassport(const string& passport) { this->passport = passport; }
+
+    friend ostream& operator<<(ostream& os, const Passenger& passenger) {
+        os << passenger.getUsername() << " " << passenger.getPassword() << " " << passenger.getName() << " " << passenger.getCnic() << " " << passenger.getPassport();
+        return os;
+    }
 };
 
 
@@ -81,6 +100,11 @@ public:
     void setDepartureTime(time_t departureTime) { this->departureTime = departureTime; }
     void setArrivalTime(time_t arrivalTime) { this->arrivalTime = arrivalTime; }
     void setAvailableSeats(int availableSeats) { this->availableSeats = availableSeats; }
+
+    friend ostream& operator<<(ostream& os, const Flight& flight) {
+        os << flight.getFlightNumber() << " " << flight.getOrigin() << " " << flight.getDestination() << " " << flight.getDepartureTime() << " " << flight.getArrivalTime() << " " << flight.getAvailableSeats();
+        return os;
+    }
 };
 
 class Booking {
@@ -159,6 +183,11 @@ public:
     void setName(const string& name) { this->name = name; }
     void setLocation(const string& location) { this->location = location; }
     void setCity(const string& city) { this->city = city; }
+
+    friend ostream& operator<<(ostream& os, const Airport& airport) {
+        os << airport.getName() << " " << airport.getLocation() << " " << airport.getCity();
+        return os;
+    }
 };
 
 
@@ -200,11 +229,11 @@ void loadAdminData(Admin admins[], int &adminCount, const string &filename) {
     }
     
     while (!inFile.eof()) {
-        string username, password, email, name;
-        inFile >> username >> password >> email >> name;
+        string username, password;
+        inFile >> username >> password;
 
         if (!inFile.fail()) {
-            Admin admin(username, password, email, name);
+            Admin admin(username, password);
             admins[adminCount++] = admin;
         }
     }
@@ -215,31 +244,55 @@ void loadAdminData(Admin admins[], int &adminCount, const string &filename) {
 
 void loadPassengerData(Passenger passengers[], int &passengerCount) {
     ifstream inFile("passengers.txt");
-    if (inFile.is_open()) {
-        while (inFile >> passengers[passengerCount]) {
-            passengerCount++;
+    if (!inFile) {
+        cerr << "Unable to open passenger data file." << endl;
+        return;
+    }
+    while (!inFile.eof()) {
+        string username, password, email, name, cnic, passport;
+        inFile >> username >> password >> email >> name >> cnic >> passport;
+        if (!inFile.fail()) {
+            Passenger passenger(username, password, name, cnic, passport);
+            passengers[passengerCount++] = passenger;
         }
-        inFile.close();
     }
 }
 
 void loadFlightData(Flight flights[], int &flightCount) {
     ifstream inFile("flights.txt");
-    if (inFile.is_open()) {
-        while (inFile >> flights[flightCount]) {
-            flightCount++;
+    if (!inFile) {
+        cerr << "Unable to open flight data file." << endl;
+        return;
+    }
+
+    while (!inFile.eof()) {
+        int flightNumber, availableSeats;
+        string origin, destination;
+        time_t departureTime, arrivalTime;
+        inFile >> flightNumber >> origin >> destination >> departureTime >> arrivalTime >> availableSeats;
+
+        if (!inFile.fail()) {
+            Flight flight(flightNumber, origin, destination, departureTime, arrivalTime, availableSeats);
+            flights[flightCount++] = flight;
         }
-        inFile.close();
     }
 }
 
 void loadAirportData(Airport airports[], int &airportCount) {
     ifstream inFile("airports.txt");
-    if (inFile.is_open()) {
-        while (inFile >> airports[airportCount]) {
-            airportCount++;
+    if (!inFile) {
+        cerr << "Unable to open airport data file." << endl;
+        return;
+    }
+
+    while (!inFile.eof()) {
+        string name, location, city;
+        inFile >> name >> location >> city;
+
+        if (!inFile.fail()) {
+            Airport airport(name, location, city);
+            airports[airportCount++] = airport;
         }
-        inFile.close();
     }
 }
 
@@ -320,22 +373,20 @@ void passengerMenu(Passenger &passenger, Flight flights[], int flightCount, Airp
 }
 
 void registerPassenger(Passenger passengers[], int &passengerCount) {
-// You may need to modify this function depending on the constructor and member variables of the Passenger class.
-string name, username, password, email;
-cout << "Enter your name: ";
-cin >> name;
-cout << "Enter your desired username: ";
-cin >> username;
-cout << "Enter your desired password: ";
-cin >> password;
-cout << "Enter your email address: ";
-cin >> email;
+    string name, username, password, email;
+    cout << "Enter your name: ";
+    cin >> name;
+    cout << "Enter your desired username: ";
+    cin >> username;
+    cout << "Enter your desired password: ";
+    cin >> password;
+    cout << "Enter your email address: ";
+    cin >> email;
 
+    Passenger newPassenger(username, password, name, "", "");
+    passengers[passengerCount++] = newPassenger;
 
-Passenger newPassenger(name, username, password, email);
-passengers[passengerCount++] = newPassenger;
-
-cout << "Registration successful! You can now log in as a passenger." << endl;
+    cout << "Registration successful! You can now log in as a passenger." << endl;
 }
 
 
@@ -355,7 +406,7 @@ int main() {
     int airportCount = 0;
     
     // Load data from files.
-    loadAdminData(admins, adminCount);
+    loadAdminData(admins, adminCount, "admin_data.txt");
     loadPassengerData(passengers, passengerCount);
     loadFlightData(flights, flightCount);
     loadAirportData(airports, airportCount);
